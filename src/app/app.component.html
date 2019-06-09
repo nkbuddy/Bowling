@@ -1,28 +1,47 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<!--<div style="text-align:center">-->
-  <h1>
+  <h2>
     Welcome to {{ title }}!
-  </h1>
+  </h2>
 
-<input id="input" type="text" size="30" pInputText [(ngModel)]="score">
+  <label>Current Frame Index: </label>
 
-<p-button [disabled]="score.length===0" label="Submit"></p-button>
+  <span id="text">{{currentFrameIndex}}</span> <br>
 
-<p-table [value]="frames">
+<input id="input" type="text" maxlength="2" size="2" [disabled]="labelDisabled" pInputText [(ngModel)]="scoreInLabel"><br>
+
+  <button *ngFor="let score of scoreOptions" [disabled]="allButtonDisabled" id="btn{{score}}" (click)="setRollScore(score)">{{score}}</button>
+
+<button [disabled]="scoreInLabel.length===0" (click)="addNewFrame()">Submit</button>
+<button (click)="initialFrameIndex()">Reset Game</button>
+
+
+
+<p-table [value]="frames|async">
   <ng-template pTemplate="header">
     <tr>
       <th>Num</th>
       <th>Input</th>
-      <th>CurrentScore</th>
-      <th>TotalScore</th>
+      <th>BaseScore</th>
+      <th>BonusScore</th>
+      <th>CurrentFrameScore</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-frame>
     <tr>
-      <td>{{frame.num}}</td>
+      <td>{{frame.index}}</td>
       <td>{{frame.input}}</td>
-      <td>{{frame.currentScore}}</td>
-      <td>{{frame.totalScore}}</td>
+      <td>{{frame.baseScore}}</td>
+      <ng-container *ngIf="frame.bonusScore==-1">
+        <td>?</td>
+      </ng-container>
+      <ng-container *ngIf="frame.bonusScore!=-1">
+        <td>{{frame.bonusScore}}</td>
+      </ng-container>
+      <ng-container *ngIf="frame.bonusScore==-1">
+        <td>?</td>
+      </ng-container>
+      <ng-container *ngIf="frame.bonusScore!=-1">
+        <td>{{frame.currentFrameScore}}</td>
+      </ng-container>
     </tr>
   </ng-template>
 </p-table>
